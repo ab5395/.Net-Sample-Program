@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C10C5EBE-039E-4290-8E48-3A6240475F3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Outlook2016</RootNamespace>
+    <AssemblyName>Outlook2016</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <StartupObject>
+    </StartupObject>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Outlook2016.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="Interop.Office">
+      <HintPath>D:\project changes\Michael\OutlookLocate_src_29e0dd3\OutlookAddInCS\OfficePIAs\Interop.Office.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.Outlook">
+      <HintPath>D:\project changes\Michael\OutlookLocate_src_29e0dd3\OutlookAddInCS\OfficePIAs\Interop.Outlook.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.VBIDE">
+      <HintPath>D:\project changes\Michael\OutlookLocate_src_29e0dd3\OutlookAddInCS\OfficePIAs\Interop.VBIDE.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="AddinExpress.MSO.2005">
+      <HintPath>C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\AddinExpress.MSO.2005.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop.dll">
+      <HintPath>Interops\Microsoft.Vbe.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Office.dll">
+      <HintPath>Interops\Office.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook.dll">
+      <HintPath>Interops\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Loader\adxloader.dll.manifest" />
+    <!--<None Include="Outlook2016.snk" /> -->
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Loader\adxloader.dll" />
+    <Content Include="Loader\adxloader64.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddinModule.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AddinModule.Designer.cs">
+      <DependentUpon>AddinModule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+</Project>

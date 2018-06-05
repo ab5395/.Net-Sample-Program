@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <assemblyIdentity name="OutlookLocate, PublicKeyToken=6513ca0314dd7f1f" imageRuntimeVersion="v4.0.30319" />
+  <loaderSettings generateLogFile="true" shadowCopyEnabled="false" privileges="user" minOfficeVersionSupported="15" />
+</configuration>

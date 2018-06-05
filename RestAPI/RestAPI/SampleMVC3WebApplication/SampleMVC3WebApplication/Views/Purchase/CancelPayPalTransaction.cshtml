@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Transaction Cancelled";
+}
+
+<h2>
+    @ViewBag.Title
+</h2>
+
+<p>
+    You cancelled the transaction. At this point you'd probably redirect back to the purchase confirmation checkout page.
+</p>
+
+<a href="@Url.Action("CheckOut", "Home")">Back to Checkout</a>

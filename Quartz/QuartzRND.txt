@@ -1,0 +1,60 @@
+Quartz - Research
+
+CronTrigger
+______________________________________________
+Build a trigger that will fire daily at 10:42 am:
+// we use CronScheduleBuilder's static helper methods here
+trigger = TriggerBuilder.Create()
+    .WithIdentity("trigger3", "group1")
+    .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(10, 42))
+    .ForJob(myJobKey)
+    .Build();
+______________________________________________
+Build a trigger that will fire on Wednesdays at 10:42 am, in a TimeZone other than the system’s default:
+trigger = TriggerBuilder.Create()
+    .WithIdentity("trigger3", "group1")
+    .WithSchedule(CronScheduleBuilder
+        .WeeklyOnDayAndHourAndMinute(DayOfWeek.Wednesday, 10, 42)
+        .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time")))
+    .ForJob(myJobKey)
+    .Build();
+_______________________________________________	
+Build a trigger for a specific moment in time, with no repeats:
+// trigger builder creates simple trigger by default, actually an ITrigger is returned
+ISimpleTrigger trigger = (ISimpleTrigger) TriggerBuilder.Create()
+    .WithIdentity("trigger1", "group1")
+    .StartAt(myStartTime) // some Date 
+    .ForJob("job1", "group1") // identify job with name, group strings
+    .Build();
+__________________________________________________
+Build a trigger that will fire now, then repeat every five minutes, until the hour 22:00:
+trigger = TriggerBuilder.Create()
+    .WithIdentity("trigger7", "group1")
+    .WithSimpleSchedule(x => x
+        .WithIntervalInMinutes(5)
+        .RepeatForever())
+    .EndAt(DateBuilder.DateOf(22, 0, 0))
+    .Build();
+__________________________________________________
+ HolidayCalendar cal = new HolidayCalendar();
+    cal.AddExcludedDate(someDate);
+    
+    sched.AddCalendar("myHolidays", cal, false);
+    
+	ITrigger t = TriggerBuilder.Create()
+		.WithIdentity("myTrigger")
+		.ForJob("myJob")
+		.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(9, 30)) // execute job daily at 9:30
+		.ModifiedByCalendar("myHolidays") // but not on holidays
+		.Build();
+
+	// .. schedule job with trigger
+
+	ITrigger t2 = TriggerBuilder.Create()
+		.WithIdentity("myTrigger2")
+		.ForJob("myJob2")
+		.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(11, 30)) // execute job daily at 11:30
+		.ModifiedByCalendar("myHolidays") // but not on holidays
+		.Build();
+    
+    // .. schedule job with trigger2 	

@@ -1,0 +1,43 @@
+﻿@model SampleMVC3WebApplication.Models.ApplicationCart
+@{
+    ViewBag.Title = "Confirm PayPal Payment";
+}
+
+<h2>
+    @ViewBag.Title
+</h2>
+
+<p>
+    PayPal say even after the user has entered their details you must get the user to make a final confirmation back on your site.
+</p>
+
+<p>
+    Confirm Purchase for;
+</p>
+<ul>
+    <li>Unique Id: @Model.Id</li>
+    @if (Model.PurchaseDescription != null)
+    {
+        <li>Purchase Description: @Model.PurchaseDescription</li>
+    }
+    <li>Currency: @Model.Currency</li>
+    <li>Total Price: @Model.TotalPrice</li>
+</ul>
+
+@if (Model.Items != null)
+{
+    <p>
+        Your cart contents;
+    </p>
+    <ul>
+        @foreach (SampleMVC3WebApplication.Models.ApplicationCartItem item in Model.Items)
+        {
+            <li>@(item.Quantity + " x " + item.Name + " @ " + item.Price + " each")</li>
+        }
+    </ul>
+}
+
+@using (Html.BeginForm())
+{
+    <input type="submit" value="Confirm Payment" />
+}

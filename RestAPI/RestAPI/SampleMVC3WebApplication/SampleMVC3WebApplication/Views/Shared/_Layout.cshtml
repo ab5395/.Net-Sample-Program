@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="page">
+        <header>
+            <div id="title">
+                <h1>PayPal MVC Express Checkout Sample Web Application</h1>
+            </div>
+            <div id="logindisplay">
+                [ No Login ]
+            </div>
+            <nav>
+                <ul id="menu">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Checkout", "CheckOut", "Home")</li>
+                    <li>@Html.ActionLink("Checkout Cart", "CheckOutCart", "Home")</li>
+                </ul>
+            </nav>
+        </header>
+        <section id="main">
+            @RenderBody()
+        </section>
+        <footer>
+        </footer>
+    </div>
+</body>
+</html>

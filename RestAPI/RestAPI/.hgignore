@@ -1,0 +1,7 @@
+syntax: glob
+PayPalMvc/bin
+PayPalMvc/obj
+SampleMVC3WebApplication/SampleMVC3WebApplication.suo
+SampleMVC3WebApplication/SampleMVC3WebApplication/bin
+SampleMVC3WebApplication/SampleMVC3WebApplication/obj
+SampleMVC3WebApplication/SampleMVC3WebApplication/SampleMVC3WebApplication.csproj.user

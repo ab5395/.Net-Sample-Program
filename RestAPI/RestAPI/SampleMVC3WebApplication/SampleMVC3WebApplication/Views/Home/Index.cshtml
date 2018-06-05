@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "PayPal Express Checkout MVC";
+}
+
+<h2>Welcome to PayPal Express Checkout MVC!</h2>
+<p>
+    This will allow you to do a test PayPal Express Checkout transaction.
+</p>
+<p>
+    First you should register with PayPal as a merchant so can modify the web.config to use your Merchant API User Name and Password along with your API Signature.
+    <br />
+    You'll also need to set up a PayPal sandbox user account so you can make a test purchase as a user.
+</p>
+<p>
+    Current config settings;
+</p>
+<ul>
+    <li><strong>Mode: @ViewBag.Mode</strong></li>
+    <li>Merchant user name: @ViewBag.MerchantUserName</li>
+    <li>Merchant password: @ViewBag.MerchantPassword</li>
+    <li>Signature: @ViewBag.Signature</li>
+</ul>
+
+<p>
+    There are two ways to make a purchase, using a single purchase object (eg if you only sell one thing), or using a cart with multiple items.
+</p>
+<a href="@Url.Action("CheckOut", "Home")">Go to Checkout</a>
+<br /><br />
+<a href="@Url.Action("CheckOutCart", "Home")">Go to Checkout Cart with Multiple Items</a>

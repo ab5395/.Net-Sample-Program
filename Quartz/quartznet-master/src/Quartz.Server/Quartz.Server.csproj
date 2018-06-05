@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net46</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Quartz\Quartz.csproj" />
+    <ProjectReference Include="..\Quartz.Serialization.Json\Quartz.Serialization.Json.csproj" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="Topshelf" Version="4.0.3" />
+  </ItemGroup>
+</Project>
