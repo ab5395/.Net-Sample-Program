@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+
+
+@*<style type="text/css">
+        #dropZone {
+            background: gray;
+            border: black dashed 3px;
+            width: 200px;
+            padding: 50px;
+            text-align: center;
+            color: white;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('#dropZone').filedrop({
+                url: '@Url.Action("UploadFiles")',
+                paramname: 'files',
+                maxFiles: 5,
+                dragOver: function () {
+                    $('#dropZone').css('background', 'blue');
+                },
+                dragLeave: function () {
+                    $('#dropZone').css('background', 'gray');
+                },
+                drop: function () {
+                    $('#dropZone').css('background', 'gray');
+                },
+                afterAll: function () {
+                    $('#dropZone').html('The file(s) have been uploaded successfully!');
+                },
+                uploadFinished: function (i, file, response, time) {
+                    $('#uploadResult').append('<li>' + file.name + '</li>');
+                }
+            });
+        });
+    </script>
+
+    <h2>File Drag & Drop Upload Demo</h2>
+    <div id="dropZone">Drop your files here</div>
+    <br />
+    Uploaded Files:
+    <ul id="uploadResult"></ul>*@
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/dropzone/dropzone.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<link href="~/Scripts/dropzone/dropzone.css" rel="stylesheet" />
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        //Dropzone.options.dropzoneForm = {
+        //    autoProcessQueue: false,
+        //    init: function () {
+        //        this.on("complete", function (data) {
+        //            //var res = eval('(' + data.xhr.responseText + ')');
+        //            var res = JSON.parse(data.xhr.responseText);
+        //            this.removeAllFiles(true);
+        //        });
+
+        //        //document.querySelector("button#clear-dropzone").addEventObserver("click", function () {
+        //        //    // Using "_this" here, because "this" doesn't point to the dropzone anymore
+        //        //    debugger;
+        //        //    _this.removeAllFiles();
+        //        //    // If you want to cancel uploads as well, you
+        //        //    // could also call _this.removeAllFiles(true);
+        //        //});
+        //    }
+
+        //};
+
+        //$("#clear-dropzone").click(function () {
+        //    debugger;
+        //    Dropzone.forElement("#dropzoneJsForm").removeAllFiles(true);
+        //});
+        //$("#submit-all").click(function () {
+        //    debugger;
+        //    Dropzone.options.dropzoneForm.processQueue();
+        //});
+
+
+
+        Dropzone.options.myAwesomeDropzone = { // The camelized version of the ID of the form element
+
+            // The configuration we've talked about above
+            autoProcessQueue: false,
+            uploadMultiple: true,
+            parallelUploads: 100,
+            maxFiles: 100,
+
+            // The setting up of the dropzone
+            init: function() {
+                var myDropzone = this;
+
+                // First change the button to actually tell Dropzone to process the queue.
+                this.element.querySelector("button[type=submit]")
+                    .addEventListener("click",
+                        function(e) {
+                            // Make sure that the form isn't actually being sent.
+                            if ($("#dd1").val === "") {
+                                alert("not Valid");
+                            } else {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                myDropzone.processQueue();
+                            }
+                    
+                });
+
+                // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+                // of the sending event because uploadMultiple is set to true.
+                this.on("sendingmultiple", function () {
+                    // Gets triggered when the form is actually being sent.
+                    // Hide the success button or the complete form.
+                });
+                this.on("successmultiple", function (files, response) {
+                    // Gets triggered when the files have successfully been sent.
+                    // Redirect user or notify of success.
+                });
+                this.on("errormultiple", function (files, response) {
+                    // Gets triggered when there was an error sending the files.
+                    // Maybe show form again, and notify user of error
+                });
+            }
+
+        }
+    });
+</script>
+
+<div class="jumbotron" id="result">
+    @*<form action="~/FileUpload/Upload" class="dropzone" name="dropzoneJsForm" id="dropzoneJsForm">
+
+        </form>*@
+    
+    <form>
+        <!-- Now setup your input fields -->
+        Category :: <input type="email" name="username" id="username" />
+        <select name="dd1">
+            <option value="">Abc</option>
+        </select>
+
+        
+    </form>
+    <form id="my-awesome-dropzone" class="dropzone" action="/FileUpload/Upload">
+        <div class="dropzone-previews"></div> <!-- this is were the previews should be shown. -->
+        <button type="submit">Submit data and files!</button>
+    </form>
+    
+   
+
+    @*<button id="submit-all">
+            Submit All Files
+        </button>
+        <button id="clear-dropzone">Clear Dropzone</button>*@
+
+</div>
