@@ -1,0 +1,211 @@
+﻿
+<script type="text/javascript">
+    $(document).ready(function () {
+        bindcountry();
+        //$("#EmployeeInsertForm").validate({
+        //    rules: {
+        //        txtName: "required",
+        //        txtDepartment: "required",
+        //        txtMobile: {
+        //                required: true,
+        //                minlength: 10
+        //            },
+        //        txtCountry: "required",
+        //        txtState: "required",
+        //        txtCity: {
+        //            required: true
+        //        }
+        //        //password: {
+        //        //    required: true,
+        //        //    minlength: 5
+        //        //},
+        //        //confirm_password: {
+        //        //    required: true,
+        //        //    minlength: 5,
+        //        //    equalTo: "#password"
+        //        //}
+        //    },
+        //    messages: {
+        //        txtName: {
+        //            required: "Please enter Name"
+        //        },
+        //        txtDepartment: {
+        //            required: "Please enter department"
+        //        },
+        //        txtMobile: {
+        //            required: "Enter Valid mobile no"
+        //        },
+        //        txtCountry: {
+        //            required: "Select Country"
+        //        },
+        //        txtState: {
+        //            required: "Select Country"
+        //        },
+        //        txtCity: {
+        //            required: "Select Country"
+        //        }
+        //    },
+        //    submitHandler: function (form) {
+
+
+        //    }
+        //});
+
+        $("#txtCountry").change(function () {
+            //debugger;
+            if (($('#txtCountry option:selected').text() === "Select Country")) {
+                $('#txtState').empty();
+                var item1 = '<option value="">Select State</option>';
+                $('#txtState').html(item1);
+            }
+            else {
+                bindstatebycountryid($('#txtCountry').val());
+            }
+        });
+
+        $("#txtState").change(function () {
+            if (($('#txtState option:selected').text() === "Select State")) {
+                $('#txtCity').empty();
+                var item1 = '<option value="">Select City</option>';
+                $('#txtCity').html(item1);
+            }
+            else {
+                bindcitybystateid($('#txtState').val());
+            }
+
+        });
+
+        $("#btnInsert").click(function () {
+            //debugger;
+
+            var obj = {};
+            obj.city = $("#txtCity").val();
+            obj.name = $("#txtName").val();
+            obj.mobile = $("#txtMobile").val();
+            obj.department = $("#txtDepartment").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddEmployee","Home")',
+                data: "{'city':'" + obj.city + "','name':'" + obj.name + "','department':'" + obj.department + "','mobile':'" + obj.mobile + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    debugger;
+                    $('#txtName').val('');
+                    $("#txtDepartment").val('');
+                    $("#txtMobile").val('');
+                    $("#txtState").empty();
+                    $("#txtCity").empty();
+                    var item1 = '<option value="">Select State</option>';
+                    var item2 = '<option value="">Select City</option>';
+                    bindcountry();
+                    $('#txtState').append(item1);
+                    $('#txtCity').append(item2);
+                    employeelist();
+                    $('#myModal').modal('hide');
+                    $("#EmployeeList").dataTable();
+                },
+                error: function (objection) {
+                    ///alert(objection);
+                }
+            });
+        });
+
+    });
+
+    function bindcitybystateid(stateid) {
+       // debugger;
+        $("#txtCity").empty();
+        $.ajax({
+            url: "/Home/BindCity?sid=" + stateid,
+            type: "Get",
+            success: function (data) {
+                var records = JSON.parse(data.data);
+                var items = '<option value="">Select City</option>';
+                for (var i = 0; i < records.length ; i++) {
+                    items += "<option value='" + records[i].CityId + "'>" + records[i].City1 + "</option>";
+                }
+                $('#txtCity').html(items);
+            },
+            error: function (msg) { alert(msg); }
+        });
+    }
+
+    function bindstatebycountryid(countryid) {
+        $("#txtState").empty();
+        $.ajax({
+            url: "/Home/BindState?cid=" + countryid,
+            type: "Get",
+            success: function (data) {
+                var records = JSON.parse(data.data);
+                var items = '<option value="">Select State</option>';
+                for (var i = 0; i < records.length ; i++) {
+                    items += "<option value='" + records[i].StateId + "'>" + records[i].State1 + "</option>";
+                }
+                $('#txtState').html(items);
+            },
+            error: function (msg) { alert(msg); }
+        });
+    }
+
+    function bindcountry() {
+        //debugger;
+        $("#txtCountry").empty();
+        $.ajax({
+            url: '@Url.Action("BindCountry", "Home")',
+            type: "Get",
+            success: function (data) {
+                var j = 1;
+                var records = JSON.parse(data.data);
+                var items = '<option value="">Select Country</option>';
+                for (var i = 0; i < records.length ; i++) {
+                    items += "<option value='" + records[i].CountryId + "'>" + records[i].Country1 + "</option>";
+                }
+                $('#txtCountry').html(items);
+            },
+            error: function (msg) { alert(msg); }
+        });
+    }
+</script>
+
+<form id="EmployeeInsertForm" name="EmployeeInsertForm">
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="txtName" id="txtName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Department</label>
+        <input type="text" name="txtDepartment" id="txtDepartment" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Mobile</label>
+        <input type="text" name="txtMobile" id="txtMobile" class="form-control" />
+    </div>
+    <div class="form-group">
+        <div>
+            <label>Country</label>
+        </div>
+        <div>
+            <select name="txtCountry" id="txtCountry" class="form-control" style="display:inline-block; "></select>
+            @*<button type="button" id="btnCountryClick" data-toggle="modal" class="btn btn-info" data-target="#myModalCountry">
+                    Add Country
+                </button>*@
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label>State</label>
+        <select name="txtState" id="txtState" class="form-control">
+            <option value="">Select State</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>City</label>
+        <select name="txtCity" id="txtCity" class="form-control">
+            <option value="">Select City</option>
+        </select>
+    </div>
+    <input type="button" name="btnInsert" value="Insert" id="btnInsert" class="btn btn-default" />
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</form>
+

@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "DatatableTest";
+    Layout = null;
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+<script src="http://momentjs.com/downloads/moment.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Content/DataTables/css/jquery.dataTables.css">
+<h2>Datatable</h2>
+
+<p>
+    @*   @Html.ActionLink("Create New", "Create")*@
+</p>
+
+<div class="box-body">
+    <div id="userTbl_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped table-hover dataTable" id="Example">
+                    <thead>
+                        <tr>
+                            <th>Rno</th>
+                            <th>
+                                Name
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function bindList() {
+        if ($.fn.DataTable.isDataTable('#Example')) {
+            $("#Example").dataTable().fnDestroy();
+        }
+        debugger;
+        var table = $('#Example').DataTable({
+            "sAjaxSource": "/Home/Getdatatables",
+            //"oLanguage": {
+            //    "sProcessing": "<img src='/images/loading.gif'>"
+            //},
+            "bServerSide": true,
+            "bProcessing": true,
+            "bSearchable": true,
+            "order": [[0, 'asc']],
+            "columns": [
+                {
+                    "data": "Rno",
+                    "autoWidth": true,
+                    "sortable": true
+                },
+                {
+                     "data": "Name", "autoWidth": true, "searchable": true, "bSortable": true
+                }
+
+            ]
+
+
+        });
+    }
+    $(document).ready(function () {
+        bindList();
+    });
+</script>
+
+
+

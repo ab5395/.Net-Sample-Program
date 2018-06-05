@@ -1,0 +1,144 @@
+﻿
+<script type="text/javascript">
+    $(document).ready(function () {
+        bindeditcountry();
+
+        $("#txtEditState").change(function () {
+            if (($('#txtEditState option:selected').text() === "Select State")) {
+                $('#txtEditCity').empty();
+                var item1 = '<option value="">Select City</option>';
+                $('#txtEditCity').html(item1);
+            }
+            else {
+                bindeditcitybystateid($('#txtEditState').val());
+            }
+        });
+
+        $("#txtEditCountry").change(function () {
+            if (($('#txtEditCountry option:selected').text() === "Select Country")) {
+                $('#txtEditState').empty();
+                var item1 = '<option value="">Select State</option>';
+                $('#txtEditState').html(item1);
+            }
+            else {
+                bindeditstatebycountryid($('#txtEditCountry').val());
+            }
+        });
+
+        $("#btnUpdate").click(function () {
+            var obj = {};
+            obj.eid = $("#txtEID").val();
+            obj.city = $("#txtEditCity").val();
+            obj.name = $("#txtEditName").val();
+            obj.mobile = $("#txtEditMobile").val();
+            obj.department = $("#txtEditDepartment").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("UpdateEmployee","Home")',
+                data: "{'eid':'" + obj.eid + "','city':'" + obj.city + "','name':'" + obj.name + "','department':'" + obj.department + "','mobile':'" + obj.mobile + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    employeelist();
+                    $('#EditModal').modal('hide');
+                },
+                error: function (objection) {
+                    alert(objection);
+                }
+            });
+        });
+    });
+
+    function bindeditcitybystateid(stateid) {
+        //debugger;
+        $("#txtEditCity").empty();
+        $.ajax({
+            url: "/Home/BindCity?sid=" + stateid,
+            type: "Get",
+            success: function (data) {
+                var records = JSON.parse(data.data);
+                var items = '<option value="">Select City</option>';
+                for (var i = 0; i < records.length ; i++) {
+                    items += "<option value='" + records[i].CityId + "'>" + records[i].City1 + "</option>";
+                }
+                $('#txtEditCity').html(items);
+            },
+            error: function (msg) { alert(msg); }
+        });
+    }
+
+    function bindeditstatebycountryid(countryid) {
+        $("#txtEditState").empty();
+        $.ajax({
+            url: "/Home/BindState?cid=" + countryid,
+            type: "Get",
+            success: function (data) {
+                var records = JSON.parse(data.data);
+                var items = '<option value="">Select State</option>';
+                for (var i = 0; i < records.length ; i++) {
+                    items += "<option value='" + records[i].StateId + "'>" + records[i].State1 + "</option>";
+                }
+                $('#txtEditState').html(items);
+            },
+            error: function (msg) { alert(msg); }
+        });
+    }
+
+    function bindeditcountry() {
+        $("#txtEditCountry").empty();
+        $.ajax({
+            url: '@Url.Action("BindCountry", "Home")',
+            type: "Get",
+            success: function (data) {
+                var j = 1;
+                var records = JSON.parse(data.data);
+                var items = '<option value="">Select Country</option>';
+                for (var i = 0; i < records.length ; i++) {
+                    items += "<option value='" + records[i].CountryId + "'>" + records[i].Country1 + "</option>";
+                }
+                $('#txtEditCountry').html(items);
+            },
+            error: function (msg) { alert(msg); }
+        });
+    }
+</script>
+
+<form>
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="txtEditName" id="txtEditName" class="form-control" />
+        <input type="hidden" name="txtEID" id="txtEID" />
+    </div>
+    <div class="form-group">
+        <label>Department</label>
+        <input type="text" name="txtEditDepartment" id="txtEditDepartment" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Mobile</label>
+        <input type="text" name="txtEditMobile" id="txtEditMobile" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Country</label>
+        <select name="txtEditCountry" id="txtEditCountry" class="form-control">
+        </select>
+
+    </div>
+    <div class="form-group">
+        <label>State</label>
+        <select name="txtEditState" id="txtEditState" class="form-control">
+            <option value="">Select State</option>
+        </select>
+        <input type="hidden" name="txtEditSID" id="txtEditSID" />
+    </div>
+    <div class="form-group">
+        <label>City</label>
+        <select name="txtEditCity" id="txtEditCity" class="form-control">
+            <option value="">Select City</option>
+        </select>
+        <input type="hidden" name="txtEditCID" id="txtEditCID" />
+    </div>
+    <input type="button" name="btnUpdate" value="Update" id="btnUpdate" class="btn btn-default" />
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</form>
+
+

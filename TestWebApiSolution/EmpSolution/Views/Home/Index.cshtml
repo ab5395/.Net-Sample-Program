@@ -1,0 +1,181 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<link href="~/Content/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        employeelist();
+        $("#EmployeeList").on('click', '.editemp', function () {
+            var id = $(this).data('eid');
+            $.ajax({
+                url: "/Home/BindEmployeeById?eid=" + id,
+                type: "Get",
+                success: function (data) {
+                    var records = JSON.parse(data.data);
+                    for (var i = 0; i < records.length ; i++) {
+                        $("#txtEID").val(records[i].EmpId);
+                        $("#txtEditName").val(records[i].Name);
+                        $("#txtEditDepartment").val(records[i].Department);
+                        $("#txtEditMobile").val(records[i].Mobile);
+                        $("#txtEditSID").val(records[i].City.StateId);
+                        $("#txtEditCID").val(records[i].CityId);
+                        $("#txtEditCountry").val(records[i].City.State.CountryId);
+                        var countryid = records[i].City.State.CountryId;
+                        var stateid = records[i].City.StateId;
+                        $("#txtEditState").empty();
+                        $.ajax({
+                            url: "/Home/BindState?cid=" + countryid,
+                            type: "Get",
+                            success: function (data1) {
+                                var records1 = JSON.parse(data1.data);
+                                var items = '<option value="">Select State</option>';
+                                for (var j = 0; j < records1.length ; j++) {
+                                    items += "<option value='" + records1[j].StateId + "'>" + records1[j].State1 + "</option>";
+                                }
+                                $('#txtEditState').html(items);
+                                $("#txtEditState").val($("#txtEditSID").val());
+                            },
+                            error: function (msg) { alert(msg); }
+                        });
+
+                        $("#txtEditCity").empty();
+                        $.ajax({
+                            url: "/Home/BindCity?sid=" + stateid,
+                            type: "Get",
+                            success: function (data2) {
+                                var records2 = JSON.parse(data2.data);
+                                var items = '<option value="">Select City</option>';
+                                for (var k = 0; k < records2.length ; k++) {
+                                    items += "<option value='" + records2[k].CityId + "'>" + records2[k].City1 + "</option>";
+                                }
+                                $('#txtEditCity').html(items);
+                                $("#txtEditCity").val($("#txtEditCID").val());
+                            },
+                            error: function (msg) { alert(msg); }
+                        });
+                    }
+                },
+                error: function (msg) { alert(msg); }
+            });
+        });
+
+        $("#EmployeeList").on('click', '.deleteemp', function () {
+            var id = $(this).data('deid');
+            // alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteEmployee","Home")',
+                data: "{'eid':'" + id + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    employeelist();
+                    $("#EmployeeList").dataTable();
+                },
+                error: function (objection) {
+                    alert(objection);
+                }
+            });
+        });
+    });
+
+    function employeelist() {
+        //$("#EmployeeList").find("tr:gt(0)").remove();
+        $("#EmployeeListTableBody").html('');
+        $.ajax({
+            url: '@Url.Action("GetEmpList", "Home")',
+            type: "Get",
+            success: function (data) {
+                var j = 1;
+                var records = JSON.parse(data.data);
+                var tablerows = "";
+                for (var i = 0; i < records.length ; i++) {
+                    var empid = records[i].EmpId;
+                    var editbutton = "<button type='button' id='btnEditEmployee' class='btn btn-info editemp' data-eid='" + empid + "' data-toggle='modal' data-target='#EditModal'>Edit</button>";
+                    var deletebutton = "<button type='button' id='btnDeleteEmployee' class='btn btn-info deleteemp' data-deid='" + empid + "' >Delete</button>";
+                    tablerows += "<tr align='center'>" + "<td>" + j + "</td>" + "</td>" + "<td>" + records[i].Name + "</td>" + "<td>" + records[i].Department + "</td>" + "<td>" + records[i].Mobile + "</td>" + "<td>" + records[i].City.City1 + "</td>" + "<td>" + records[i].City.State.State1 + "</td>" + "<td>" + records[i].City.State.Country.Country1 + "</td>" + "<td style='width: 150px;'>" + editbutton + "   " + deletebutton + "</td>" + "</tr>";
+                    j = j + 1;
+                    $('#EmployeeListTableBody').append(tablerows);
+                    tablerows = "";
+                }
+                //$("#EmployeeList").dataTable();
+            },
+            error: function (msg) { alert(msg); }
+        });
+    }
+
+
+</script>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="float: right; margin-bottom: 5px;">
+    Add Employee
+</button>
+
+<h3>Employee List</h3>
+<div>
+    <table id="EmployeeList" class="table table-bordered">
+        <thead>
+            <tr>
+                <td align="center">
+                    <b>Index</b>
+                </td>
+                <td align="center">
+                    <b>Name</b>
+                </td>
+                <td align="center">
+                    <b>Department</b>
+                </td>
+                <td align="center">
+                    <b>Mobile</b>
+                </td>
+                <td align="center">
+                    <b>City</b>
+                </td>
+                <td align="center">
+                    <b>State</b>
+                </td>
+                <td align="center">
+                    <b>Country</b>
+                </td>
+                <td align="center"></td>
+            </tr>
+        </thead>
+        <tbody id="EmployeeListTableBody"></tbody>
+    </table>
+</div>
+
+<!--Add Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Employee</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_AddEmployee")
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit Modal -->
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="EditmyModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="EditmyModalLabel">Edit Employee</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_EditEmployee")
+            </div>
+        </div>
+    </div>
+</div>
